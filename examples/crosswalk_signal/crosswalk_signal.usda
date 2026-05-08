@@ -1,0 +1,129 @@
+#usda 1.0
+(
+    defaultPrim = "CrosswalkSignal"
+    metersPerUnit = 1
+    startTimeCode = 0
+    endTimeCode = 60
+    timeCodesPerSecond = 1
+    doc = """A pedestrian crosswalk signal that cycles through Walk, countdown,
+    and Don't Walk states. Demonstrates the AccessibilityAPI timeSamples technique
+    for conveying time-varying visual state changes to assistive technologies.
+    The 60-second timeline represents one full signal cycle designed to loop."""
+)
+
+def Xform "CrosswalkSignal" (
+    prepend apiSchemas = ["AccessibilityAPI:default"]
+)
+{
+    string accessibility:default:label.timeSamples = {
+        0: "Walk",
+
+        20: "Don't Walk — 10",
+        # 2 second label to ensure 'Don't Walk' announcement is not trampled by '9'
+        # 21: "9",
+
+        22: "8",
+        23: "7",
+        24: "6",
+        25: "5",
+        26: "4",
+        27: "3",
+        28: "2",
+        29: "1",
+        30: "Don't Walk",
+
+        60: "Walk",
+    }
+
+    def Cube "Pole"
+    {
+        double size = 1.0
+        double3 xformOp:scale = (0.08, 3.0, 0.08)
+        double3 xformOp:translate = (0, 1.5, 0)
+        token[] xformOpOrder = ["xformOp:scale", "xformOp:translate"]
+        color3f[] primvars:displayColor = [(0.3, 0.3, 0.3)]
+    }
+
+    def Xform "SignalHead"
+    {
+        double3 xformOp:translate = (0, 3.2, 0)
+        token[] xformOpOrder = ["xformOp:translate"]
+
+        def Cube "Housing"
+        {
+            double size = 0.4
+            double3 xformOp:scale = (1, 1.2, 0.5)
+            token[] xformOpOrder = ["xformOp:scale"]
+            color3f[] primvars:displayColor = [(0.05, 0.05, 0.05)]
+        }
+
+        def Mesh "WalkSymbol"
+        {
+            double3 xformOp:translate = (0, 0.08, 0.11)
+            token[] xformOpOrder = ["xformOp:translate"]
+            int[] faceVertexCounts = [6, 4, 4, 4, 4, 4]
+            int[] faceVertexIndices = [
+                0, 1, 2, 3, 4, 5,
+                6, 7, 8, 9,
+                10, 11, 12, 13,
+                14, 15, 16, 17,
+                18, 19, 20, 21,
+                22, 23, 24, 25
+            ]
+            point3f[] points = [
+                (0.0, 0.095, 0), (0.013, 0.088, 0), (0.013, 0.072, 0),
+                (0.0, 0.065, 0), (-0.013, 0.072, 0), (-0.013, 0.088, 0),
+
+                (-0.01, 0.06, 0), (0.01, 0.06, 0),
+                (0.008, 0.005, 0), (-0.008, 0.005, 0),
+
+                (-0.005, 0.055, 0), (-0.01, 0.048, 0),
+                (-0.055, 0.015, 0), (-0.048, 0.008, 0),
+
+                (0.01, 0.048, 0), (0.005, 0.055, 0),
+                (0.048, 0.008, 0), (0.055, 0.015, 0),
+
+                (-0.005, 0.008, 0), (0.005, 0.008, 0),
+                (-0.03, -0.1, 0), (-0.042, -0.1, 0),
+
+                (-0.005, 0.008, 0), (0.005, 0.008, 0),
+                (0.042, -0.1, 0), (0.03, -0.1, 0)
+            ]
+            color3f[] primvars:displayColor.timeSamples = {
+                0: [(0, 0.9, 0.3)],
+                20: [(0.05, 0.05, 0.05)],
+                60: [(0, 0.9, 0.3)]
+            }
+        }
+
+        def Mesh "HandSymbol"
+        {
+            double3 xformOp:translate = (0, -0.08, 0.11)
+            token[] xformOpOrder = ["xformOp:translate"]
+            int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+            int[] faceVertexIndices = [
+                0, 1, 2, 3,
+                4, 5, 6, 7,
+                8, 9, 10, 11,
+                12, 13, 14, 15,
+                16, 17, 18, 19,
+                20, 21, 22, 23
+            ]
+            point3f[] points = [
+                (-0.04, -0.06, 0), (0.04, -0.06, 0), (0.04, 0.01, 0), (-0.04, 0.01, 0),
+
+                (-0.035, 0.01, 0), (-0.02, 0.01, 0), (-0.02, 0.075, 0), (-0.035, 0.075, 0),
+                (-0.012, 0.01, 0), (0.003, 0.01, 0), (0.003, 0.085, 0), (-0.012, 0.085, 0),
+                (0.01, 0.01, 0), (0.025, 0.01, 0), (0.025, 0.075, 0), (0.01, 0.075, 0),
+                (0.032, 0.01, 0), (0.047, 0.01, 0), (0.047, 0.06, 0), (0.032, 0.06, 0),
+
+                (-0.04, -0.02, 0), (-0.04, 0.005, 0), (-0.065, 0.03, 0), (-0.065, 0.005, 0)
+            ]
+            color3f[] primvars:displayColor.timeSamples = {
+                0: [(0.05, 0.05, 0.05)],
+                20: [(0.9, 0.1, 0.1)],
+                60: [(0.05, 0.05, 0.05)]
+            }
+        }
+    }
+}
